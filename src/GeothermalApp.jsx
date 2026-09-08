@@ -1,6 +1,5 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
-  MARKETS,
   DEVELOPMENTS,
   REGIONS,
   APPLICATIONS,
@@ -16,6 +15,72 @@ import {
   formatDate,
   regionLabel,
 } from './content/geothermal.js'
+
+const HERO_IMAGES = [
+  '/mosaic-1.jpg',
+  '/mosaic-2.jpg',
+  '/mosaic-3.jpg',
+  '/mosaic-4.jpg',
+  '/mosaic-5.jpg',
+  '/mosaic-6.jpg',
+]
+
+const HOME_GUIDE = [
+  {
+    id: 'markets',
+    path: '/geothermal/markets',
+    kicker: 'Markets',
+    title: 'Country profiles',
+    lede: 'Browse geothermal markets by region and application—electricity, heating, industrial heat, and direct use.',
+    image: 'https://images.unsplash.com/photo-1519681393784-d120267933ba?w=800&q=80',
+  },
+  {
+    id: 'developments',
+    path: '/geothermal/developments',
+    kicker: 'Feed',
+    title: 'Recent developments',
+    lede: 'Dated changes to laws, financing facilities, project milestones, and procurement notices.',
+    image: 'https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=800&q=80',
+  },
+  {
+    id: 'policy',
+    path: '/geothermal/policy-financing',
+    kicker: 'Rules',
+    title: 'Policy and financing',
+    lede: 'Compare the instruments that shape development across markets—without empty comparison panels.',
+    image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&q=80',
+  },
+  {
+    id: 'engagement',
+    path: '/geothermal/us-engagement',
+    kicker: 'United States',
+    title: 'U.S. international engagement',
+    lede: 'Existing authorities and proposed programs for U.S. participation in overseas geothermal markets.',
+    image: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=800&q=80',
+  },
+  {
+    id: 'domestic',
+    path: '/geothermal/us-domestic',
+    kicker: 'United States',
+    title: 'U.S. domestic context',
+    lede: 'Proposed legislation and agency testimony that frame domestic geothermal policy.',
+    image: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?w=800&q=80',
+  },
+  {
+    id: 'methodology',
+    path: '/geothermal/methodology',
+    kicker: 'About',
+    title: 'Methodology',
+    lede: 'How this reference sources claims, separates analysis, and chooses which markets to cover.',
+    image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80',
+  },
+]
+
+const REGION_IMAGES = {
+  'asia-pacific': 'https://images.unsplash.com/photo-1480796927426-f609979314bd?w=800&q=80',
+  africa: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=800&q=80',
+  americas: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+}
 
 const NAV = [
   { id: 'home', path: '/geothermal', label: 'Overview' },
@@ -43,6 +108,27 @@ export function parseGeothermalPath(pathname) {
   return null
 }
 
+function useReveal(threshold = 0.12) {
+  const ref = useRef(null)
+  const [shown, setShown] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return undefined
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShown(true)
+          obs.disconnect()
+        }
+      },
+      { threshold },
+    )
+    obs.observe(el)
+    return () => obs.disconnect()
+  }, [threshold])
+  return [ref, shown]
+}
+
 function SourceList({ docIds }) {
   const docs = docsFor(docIds)
   if (!docs.length) return null
@@ -59,6 +145,78 @@ function SourceList({ docIds }) {
         </li>
       ))}
     </ul>
+  )
+}
+
+function HeroMosaic({ images }) {
+  if (!images?.length) return null
+  return (
+    <>
+      <div className="geo-hero-mosaic" aria-hidden="true">
+        {images.slice(0, 6).map((src, i) => (
+          <div key={src} className="geo-hero-tile" style={{ '--hero-i': i }}>
+            <img src={src} alt="" loading="eager" decoding="async" />
+          </div>
+        ))}
+      </div>
+      <div className="geo-hero-vignette" aria-hidden="true" />
+    </>
+  )
+}
+
+function GuideCard({ item, index, navigate }) {
+  const [ref, shown] = useReveal(0.08)
+  return (
+    <a
+      ref={ref}
+      href={item.path}
+      className={`geo-guide-card editorial-panel editorial-shimmer home-door-card group${shown ? ' is-shown' : ''}`}
+      style={{ animationDelay: `${index * 70}ms`, '--door-i': index }}
+      onClick={(e) => {
+        e.preventDefault()
+        navigate(item.path)
+      }}
+    >
+      <div className="geo-guide-media">
+        <img src={item.image} alt="" loading="lazy" decoding="async" />
+        <div className="geo-guide-media-shade" />
+      </div>
+      <div className="geo-guide-body">
+        <div className="editorial-kicker">{item.kicker}</div>
+        <h2>{item.title}</h2>
+        <p>{item.lede}</p>
+        <span className="geo-guide-arrow">Read →</span>
+      </div>
+    </a>
+  )
+}
+
+function MarketCard({ market, index, navigate }) {
+  const [ref, shown] = useReveal(0.08)
+  const image = REGION_IMAGES[market.region] || REGION_IMAGES['asia-pacific']
+  return (
+    <button
+      ref={ref}
+      type="button"
+      className={`geo-market-card editorial-panel editorial-shimmer home-door-card group${shown ? ' is-shown' : ''}`}
+      style={{ animationDelay: `${index * 55}ms`, '--door-i': index }}
+      onClick={() => navigate(`/geothermal/markets/${market.id}`)}
+    >
+      <div className="geo-market-card-media">
+        <img src={image} alt="" loading="lazy" decoding="async" />
+        <div className="geo-guide-media-shade" />
+      </div>
+      <div className="geo-market-card-body">
+        <span className="geo-market-name">
+          {market.name}
+          {market.asiaPacificPriority && <span className="geo-badge geo-badge-soft">S. 4610</span>}
+        </span>
+        <span className="geo-market-apps">
+          {market.applications.map((a) => APPLICATIONS.find((x) => x.id === a)?.label).filter(Boolean).join(' · ')}
+        </span>
+        <span className="geo-guide-arrow">Open profile →</span>
+      </div>
+    </button>
   )
 }
 
@@ -182,11 +340,8 @@ function Footer({ onHome }) {
   return (
     <footer className="app-footer geo-footer">
       <div>
-        <p>{DISCLOSURE}</p>
-        <p className="geo-meta">
-          MDEV · International Geothermal Markets ·{' '}
-          <a href="https://thermalunderground.org">The Thermal Underground</a>
-        </p>
+        <p>Thermal Underground © Adler Archer.</p>
+        <p className="geo-meta disclosure-glow">{DISCLOSURE}</p>
       </div>
       <button type="button" className="back-link" onClick={onHome}>
         ← Change energy program
@@ -197,16 +352,23 @@ function Footer({ onHome }) {
 
 function HomePage({ navigate }) {
   const recent = [...DEVELOPMENTS].sort((a, b) => b.date.localeCompare(a.date)).slice(0, 6)
+  const [feedRef, feedShown] = useReveal(0.1)
+
   return (
     <>
-      <section className="app-hero">
-        <div className="app-hero-copy">
-          <p className="app-kicker">International · Geothermal</p>
-          <h1>International Geothermal Markets</h1>
-          <p className="app-lede">
+      <section className="geo-entry-hero">
+        <HeroMosaic images={HERO_IMAGES} />
+        <div className="geo-entry-hero-inner">
+          <p className="app-kicker rise d2">International · Geothermal</p>
+          <h1 className="rise d3">
+            <span className="geo-entry-title-line">International</span>
+            <span className="geo-entry-title-accent">Geothermal Markets</span>
+          </h1>
+          <span className="geo-entry-rule rise d4" aria-hidden="true" />
+          <p className="app-lede rise d5">
             Explore geothermal projects, policy, and financing around the world. Country profiles connect electricity, heating, and industrial applications with buyers, development requirements, and U.S. capabilities.
           </p>
-          <div className="app-cta-row">
+          <div className="app-cta-row rise d6">
             <a
               href="/geothermal/markets"
               className="app-cta"
@@ -231,27 +393,19 @@ function HomePage({ navigate }) {
         </div>
       </section>
 
-      <section className="app-section">
+      <section className="app-section geo-guide-section">
         <div className="app-section-inner">
-          <div className="geo-card-grid">
-            {[
-              { path: '/geothermal/markets', title: 'Markets', body: 'Browse country profiles by region and application.' },
-              { path: '/geothermal/developments', title: 'Recent developments', body: 'Dated changes to laws, financing, projects, and procurement.' },
-              { path: '/geothermal/policy-financing', title: 'Policy and financing', body: 'Compare the rules and instruments that shape development.' },
-              { path: '/geothermal/us-engagement', title: 'U.S. international engagement', body: 'Existing authorities and proposed programs.' },
-            ].map((card) => (
-              <a
-                key={card.path}
-                href={card.path}
-                className="geo-card"
-                onClick={(e) => {
-                  e.preventDefault()
-                  navigate(card.path)
-                }}
-              >
-                <h2>{card.title}</h2>
-                <p>{card.body}</p>
-              </a>
+          <div className="geo-guide-head">
+            <div className="editorial-kicker">Field guide</div>
+            <h2>What’s on this site</h2>
+            <hr className="editorial-rule" />
+            <p>
+              Country markets, dated developments, policy instruments, and U.S. engagement—organized so you can see where technology and services fit overseas.
+            </p>
+          </div>
+          <div className="geo-guide-grid">
+            {HOME_GUIDE.map((item, i) => (
+              <GuideCard key={item.id} item={item} index={i} navigate={navigate} />
             ))}
           </div>
         </div>
@@ -260,13 +414,17 @@ function HomePage({ navigate }) {
       <section className="app-section">
         <div className="app-section-inner">
           <p className="app-kicker">Feed</p>
-          <h2>Recent developments</h2>
-          <ul className="geo-feed">
-            {recent.map((item) => {
+          <h2 className="geo-section-title">Recent developments</h2>
+          <ul className={`geo-feed geo-feed-cards${feedShown ? ' is-shown' : ''}`} ref={feedRef}>
+            {recent.map((item, i) => {
               const market = marketById(item.marketId)
               const doc = docsFor(item.docIds)[0]
               return (
-                <li key={item.id}>
+                <li
+                  key={item.id}
+                  className="geo-feed-card editorial-panel"
+                  style={{ animationDelay: `${i * 60}ms` }}
+                >
                   <div className="geo-feed-meta">
                     <span>{market?.name}</span>
                     <span>{formatDate(item.date)}</span>
@@ -295,11 +453,11 @@ function MarketsPage({ navigate }) {
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return MARKETS.filter((m) => {
+    return publishedMarkets().filter((m) => {
       if (region !== 'all' && m.region !== region) return false
       if (application !== 'all' && !m.applications.includes(application)) return false
       if (q) {
-        const hay = `${m.name} ${m.overview.join(' ')} ${m.notes || ''}`.toLowerCase()
+        const hay = `${m.name} ${m.overview.join(' ')} ${(m.analysis || []).join(' ')} ${m.applicationDetail?.body?.join(' ') || ''} ${m.engagement?.body?.join(' ') || ''}`.toLowerCase()
         if (!hay.includes(q)) return false
       }
       return true
@@ -312,7 +470,7 @@ function MarketsPage({ navigate }) {
         <p className="app-kicker">Markets</p>
         <h1 className="geo-page-title">Country profiles</h1>
         <p className="app-lede geo-page-lede">
-          Fifteen starting markets across Asia and Pacific, Africa, and the Americas. Draft profiles stay unpublished until they contain useful sourced content.
+          Fifteen starting markets across Asia and Pacific, Africa, and the Americas. Profiles link applications, buyers, and sourced developments.
         </p>
 
         <div className="geo-filters">
@@ -351,26 +509,11 @@ function MarketsPage({ navigate }) {
           return (
             <div key={r.id} className="geo-region-block">
               <h2>{r.label}</h2>
-              <ul className="geo-market-list">
-                {markets.map((m) => (
-                  <li key={m.id}>
-                    <button
-                      type="button"
-                      className="geo-market-row"
-                      onClick={() => navigate(`/geothermal/markets/${m.id}`)}
-                    >
-                      <span className="geo-market-name">
-                        {m.name}
-                        {m.status === 'draft' && <span className="geo-badge">Draft</span>}
-                        {m.asiaPacificPriority && <span className="geo-badge geo-badge-soft">S. 4610</span>}
-                      </span>
-                      <span className="geo-market-apps">
-                        {m.applications.map((a) => APPLICATIONS.find((x) => x.id === a)?.label).filter(Boolean).join(' · ')}
-                      </span>
-                    </button>
-                  </li>
+              <div className="geo-market-card-grid">
+                {markets.map((m, i) => (
+                  <MarketCard key={m.id} market={m} index={i} navigate={navigate} />
                 ))}
-              </ul>
+              </div>
             </div>
           )
         })}
@@ -417,11 +560,27 @@ function CountryPage({ slug, navigate }) {
           </p>
         )}
 
-        {market.overview.length > 0 && (
+        {market.overview?.length > 0 && (
           <div className="geo-prose">
             <h2>Overview</h2>
             {market.overview.map((p) => <p key={p}>{p}</p>)}
-            <SourceList docIds={market.docIds} />
+            <SourceList docIds={market.overviewDocIds || market.docIds} />
+          </div>
+        )}
+
+        {market.applicationDetail && (
+          <div className="geo-prose">
+            <h2>{market.applicationDetail.title}</h2>
+            {market.applicationDetail.body.map((p) => <p key={p}>{p}</p>)}
+            <SourceList docIds={market.applicationDetail.docIds} />
+          </div>
+        )}
+
+        {market.engagement && (
+          <div className="geo-prose">
+            <h2>{market.engagement.title}</h2>
+            {market.engagement.body.map((p) => <p key={p}>{p}</p>)}
+            <SourceList docIds={market.engagement.docIds} />
           </div>
         )}
 
@@ -451,27 +610,20 @@ function CountryPage({ slug, navigate }) {
           </div>
         )}
 
-        <div className="geo-prose">
-          <h2>Applications and buyers</h2>
-          <p>
-            Separate entries for applications with different buyers or requirements will appear here as sourced. Unsupported fields are omitted from the public page.
-          </p>
-        </div>
+        {market.policyDetail && (
+          <div className="geo-prose">
+            <h2>{market.policyDetail.title || 'Policy and financing'}</h2>
+            {market.policyDetail.body.map((p) => <p key={p}>{p}</p>)}
+            <SourceList docIds={market.policyDetail.docIds} />
+          </div>
+        )}
 
-        <div className="geo-prose">
-          <h2>Policy and financing</h2>
-          <p>
-            Relevant provisions from the six comparison areas appear when sourced for this market. Empty panels are not shown.
-          </p>
-          <ul className="geo-policy-keys">
-            {POLICY_AREAS.map((area) => (
-              <li key={area.id}>
-                <strong>{area.label}</strong>
-                <span>{area.capture}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {market.analysis?.length > 0 && (
+          <div className="geo-prose geo-analysis">
+            <h2>Analysis</h2>
+            {market.analysis.map((p) => <p key={p}>{p}</p>)}
+          </div>
+        )}
       </div>
     </section>
   )

@@ -69,7 +69,7 @@ function SiteNav({ onHome }) {
       >
         <img src="/logo.png" width="256" height="256" alt="" />
         <span className="brand-name">
-          Market Development <i>MDEV</i>
+          The Thermal Underground <i>MDEV</i>
         </span>
         <span className="demo-mark">Demo</span>
       </a>
@@ -114,15 +114,16 @@ function Landing({ onEnter }) {
           <span className="logo-spark logo-spark--4" aria-hidden="true" />
           <img src="/logo.png" width="256" height="256" alt="Thermal Underground" />
         </div>
-        <p className="kicker rise d2">DOE market development</p>
+        <p className="kicker rise d2">A Thermal Underground project</p>
         <h1>
-          <span className="title-line rise d3">Accelerating</span>
-          <span className="title-accent rise d4">Energy Abundance</span>
+          <span className="title-line rise d3">International</span>
+          <span className="title-accent rise d4">Market Development</span>
         </h1>
         <span className="rule rise d5" aria-hidden="true" />
         <p className="lede rise d5">
-          Choose an energy program. Geothermal opens the international markets reference. Nuclear, oil and gas, and critical minerals are forthcoming.
+          Country markets, recent deals, financing, and policy—so you can see where U.S. technology and services fit overseas.
         </p>
+        <p className="enter-prompt rise d5">Choose a program</p>
         <div className="enter-row rise d6">
           {PROGRAMS.map((program) => (
             <EnterButton key={program.id} program={program} onEnter={onEnter} />
@@ -136,12 +137,10 @@ function Landing({ onEnter }) {
 function LandingFooter() {
   return (
     <footer className="page-footer">
-      <p>
-        Thermal Underground ·{' '}
-        <a href="https://thermalunderground.org">thermalunderground.org</a>
-        {' '}— international market development.
+      <p>Thermal Underground © Adler Archer.</p>
+      <p className="page-footer-note disclosure-glow">
+        Not an official U.S. government publication.
       </p>
-      <p>Copy © Adler Archer.</p>
     </footer>
   )
 }

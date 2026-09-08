@@ -22,46 +22,6 @@ export const DEVELOPMENT_TYPES = [
 
 /** Document records — issuer, URL, version, retrieval notes. */
 export const DOCUMENTS = {
-  's4610-rs': {
-    id: 's4610-rs',
-    issuer: 'U.S. Congress',
-    title: 'S. 4610, Pacific POWER Act — reported version',
-    identifier: 'BILLS-119s4610rs',
-    url: 'https://www.govinfo.gov/app/details/BILLS-119s4610rs',
-    textUrl: 'https://www.govinfo.gov/content/pkg/BILLS-119s4610rs/html/BILLS-119s4610rs.htm',
-    version: 'Reported in Senate',
-    publicationDate: '2026-07-27',
-    legalStatus: 'Proposed legislation',
-    notes: 'Use reported version for proposal description. Introduced version belongs in version history. Research tools had different retrieval results; preserve access history in this record.',
-  },
-  'hr5631-eh': {
-    id: 'hr5631-eh',
-    issuer: 'U.S. Congress',
-    title: 'H.R. 5631, Geothermal Energy Advancement Act — House-engrossed',
-    identifier: 'BILLS-119hr5631eh',
-    url: 'https://www.govinfo.gov/app/details/BILLS-119hr5631eh',
-    version: 'Engrossed in House',
-    publicationDate: '2026-06-02',
-    legalStatus: 'Proposed legislation',
-    notes: 'Describe provisions as proposals unless subsequent enactment is verified.',
-  },
-  'blm-raby-2025-12': {
-    id: 'blm-raby-2025-12',
-    issuer: 'U.S. Bureau of Land Management',
-    title: 'Jon Raby testimony — House Natural Resources legislative hearing',
-    url: 'https://www.blm.gov/sites/default/files/docs/2025-12/BLM_Testimony_12-16-25_HNR_EMR_Legislative_Hearing.pdf',
-    publicationDate: '2025-12-16',
-    notes: 'Agency input on earlier hearing bills. Keep distinct from later H.R. 5631 text. Recommended broader surface-agency participation and incorporating geothermal into the Gold Book.',
-  },
-  'usc-17203': {
-    id: 'usc-17203',
-    issuer: 'United States Code',
-    title: '42 U.S.C. § 17203 — international geothermal collaboration',
-    identifier: '42 U.S.C. 17203',
-    url: 'https://www.law.cornell.edu/uscode/text/42/17203',
-    legalStatus: 'Existing authority',
-    notes: 'Addresses international collaboration on geothermal RD&D and USTDA participation in feasibility and resource-assessment support. Scope of authority does not imply automatic funding.',
-  },
   'nedo-nextgen-2026': {
     id: 'nedo-nextgen-2026',
     issuer: 'NEDO (Japan)',
@@ -242,7 +202,7 @@ export const DOCUMENTS = {
 
 /**
  * Markets — 15 starting coverage.
- * asiaPacificPriority: true for the nine listed in S. 4610 engagement provision.
+ * asiaPacificPriority: true for the nine Asia-Pacific priority markets in this reference.
  * status: published | draft
  */
 export const MARKETS = [
@@ -250,6 +210,7 @@ export const MARKETS = [
     id: 'taiwan',
     name: 'Taiwan',
     region: 'asia-pacific',
+    image: 'https://images.unsplash.com/photo-1470004914212-05527e49370b?w=1200&q=80',
     asiaPacificPriority: true,
     status: 'published',
     applications: ['electricity', 'heating'],
@@ -264,6 +225,7 @@ export const MARKETS = [
     id: 'philippines',
     name: 'Philippines',
     region: 'asia-pacific',
+    image: 'https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?w=1200&q=80',
     asiaPacificPriority: true,
     status: 'published',
     applications: ['electricity'],
@@ -289,6 +251,7 @@ export const MARKETS = [
     id: 'japan',
     name: 'Japan',
     region: 'asia-pacific',
+    image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=1200&q=80',
     asiaPacificPriority: true,
     status: 'published',
     applications: ['electricity', 'heating'],
@@ -303,6 +266,7 @@ export const MARKETS = [
     id: 'australia',
     name: 'Australia',
     region: 'asia-pacific',
+    image: 'https://images.unsplash.com/photo-1523482580733-285fcbd5ebe9?w=1200&q=80',
     asiaPacificPriority: true,
     status: 'published',
     applications: ['heating', 'direct-use', 'electricity'],
@@ -326,6 +290,7 @@ export const MARKETS = [
     id: 'indonesia',
     name: 'Indonesia',
     region: 'asia-pacific',
+    image: 'https://images.unsplash.com/photo-1537996194471-e785df86c08f?w=1200&q=80',
     asiaPacificPriority: true,
     status: 'published',
     applications: ['electricity'],
@@ -341,6 +306,7 @@ export const MARKETS = [
     id: 'india',
     name: 'India',
     region: 'asia-pacific',
+    image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=1200&q=80',
     asiaPacificPriority: true,
     status: 'published',
     applications: ['electricity', 'heating', 'direct-use'],
@@ -371,6 +337,7 @@ export const MARKETS = [
     id: 'new-zealand',
     name: 'New Zealand',
     region: 'asia-pacific',
+    image: 'https://images.unsplash.com/photo-1469521669194-8fea6bc012b0?w=1200&q=80',
     asiaPacificPriority: true,
     status: 'published',
     applications: ['electricity', 'heating', 'direct-use'],
@@ -386,6 +353,7 @@ export const MARKETS = [
     id: 'papua-new-guinea',
     name: 'Papua New Guinea',
     region: 'asia-pacific',
+    image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=1200&q=80',
     asiaPacificPriority: true,
     status: 'published',
     applications: ['electricity', 'industrial'],
@@ -409,6 +377,7 @@ export const MARKETS = [
     id: 'thailand',
     name: 'Thailand',
     region: 'asia-pacific',
+    image: 'https://images.unsplash.com/photo-1528181304800-259b08848526?w=1200&q=80',
     asiaPacificPriority: true,
     status: 'published',
     applications: ['electricity'],
@@ -432,6 +401,7 @@ export const MARKETS = [
     id: 'kenya',
     name: 'Kenya',
     region: 'africa',
+    image: 'https://images.unsplash.com/photo-1516426122078-c23e76319801?w=1200&q=80',
     asiaPacificPriority: false,
     status: 'published',
     applications: ['electricity'],
@@ -447,6 +417,7 @@ export const MARKETS = [
     id: 'ethiopia',
     name: 'Ethiopia',
     region: 'africa',
+    image: 'https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?w=1200&q=80',
     asiaPacificPriority: false,
     status: 'published',
     applications: ['electricity'],
@@ -462,6 +433,7 @@ export const MARKETS = [
     id: 'mexico',
     name: 'Mexico',
     region: 'americas',
+    image: 'https://images.unsplash.com/photo-1518638150340-f706e86654de?w=1200&q=80',
     asiaPacificPriority: false,
     status: 'published',
     applications: ['electricity'],
@@ -476,6 +448,7 @@ export const MARKETS = [
     id: 'chile',
     name: 'Chile',
     region: 'americas',
+    image: 'https://images.unsplash.com/photo-1478827536114-da961b7f86d2?w=1200&q=80',
     asiaPacificPriority: false,
     status: 'published',
     applications: ['electricity', 'industrial', 'heating'],
@@ -490,6 +463,7 @@ export const MARKETS = [
     id: 'el-salvador',
     name: 'El Salvador',
     region: 'americas',
+    image: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1200&q=80',
     asiaPacificPriority: false,
     status: 'published',
     applications: ['electricity', 'direct-use'],
@@ -504,6 +478,7 @@ export const MARKETS = [
     id: 'dominica',
     name: 'Dominica',
     region: 'americas',
+    image: 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=1200&q=80',
     asiaPacificPriority: false,
     status: 'published',
     applications: ['electricity'],
@@ -514,9 +489,6 @@ export const MARKETS = [
     docIds: ['dominica-irc-2026'],
   },
 ]
-
-/** Expansion backlog — not shown as a public deferred list. */
-export const EXPANSION_BACKLOG = ['Canada', 'Colombia', 'Costa Rica', 'Poland', 'Türkiye']
 
 /** Dated developments for homepage feed and country pages. */
 export const DEVELOPMENTS = [
@@ -611,59 +583,6 @@ export const DEVELOPMENTS = [
     docIds: ['afdb-kenya-menengai'],
   },
 ]
-
-export const US_ENGAGEMENT = {
-  title: 'U.S. international engagement',
-  lede: 'Existing authority and proposed legislation for U.S. engagement in international geothermal markets.',
-  coverageNote: 'The nine Asia-Pacific markets in this reference—Taiwan, Philippines, Japan, Australia, Indonesia, India, New Zealand, Papua New Guinea, and Thailand—appear in the engagement provision of the July 27, 2026 reported version of S. 4610. Kenya, Ethiopia, Mexico, Chile, El Salvador, and Dominica are editorial selections for this site.',
-  existing: {
-    title: 'Existing authority',
-    body: [
-      '42 U.S.C. § 17203 addresses international collaboration on geothermal research, development, and demonstration, and USTDA participation in feasibility and resource-assessment support.',
-      'This page describes the scope of the authority. It does not imply that funding or project support is automatically available.',
-    ],
-    docIds: ['usc-17203'],
-  },
-  proposed: {
-    title: 'Pacific POWER Act (S. 4610)',
-    statusChecked: '2026-09-08',
-    statusLabel: 'Reported in Senate · July 27, 2026',
-    body: [
-      'Use the reported version of S. 4610, dated July 27, 2026, for the proposal\'s description. The introduced version belongs in its version history.',
-      'Relevant provisions include prioritized engagement, a global assessment, partner selection, permitting assistance, and coordination between State and DOE.',
-    ],
-    docIds: ['s4610-rs'],
-  },
-}
-
-export const US_DOMESTIC = {
-  title: 'U.S. domestic policy',
-  lede: 'Domestic developments relevant to geothermal practice and international comparison.',
-  bill: {
-    title: 'H.R. 5631, Geothermal Energy Advancement Act',
-    statusLabel: 'House-engrossed · June 2, 2026',
-    note: 'Provisions below are proposals unless subsequent enactment is verified.',
-    sections: [
-      { num: '§2', subject: 'Decisions on covered applications within 60 days after applicable legal requirements are completed, subject to the stated court-relief exception. The deadline covers the final decision stage; it is not a total permitting duration.' },
-      { num: '§3', subject: 'Cost recovery for leasing, permitting, and inspections through September 30, 2033, with conditions on collection and spending.' },
-      { num: '§4', subject: 'Evaluation of the cost-recovery changes within five years.' },
-      { num: '§5', subject: 'Update and rename the existing Gold Book to incorporate geothermal guidance.' },
-      { num: '§6', subject: 'Ombudsman, conditional staffing support, coordination, and annual evaluation of permit processing. Staffing provisions require approvals and preserve underlying jurisdiction.' },
-      { num: '§7', subject: 'Reduced-royalty period tied to each facility\'s in-service date, with a shared-turbine qualification.' },
-      { num: '§8', subject: 'Extension of the specified section 390 environmental-review framework to geothermal.' },
-    ],
-    docIds: ['hr5631-eh'],
-  },
-  testimony: {
-    title: 'BLM testimony (Jon Raby)',
-    date: '2025-12-16',
-    body: [
-      'Jon Raby\'s December 16, 2025 BLM testimony is agency input on earlier hearing bills. It recommended broader surface-agency participation and incorporating geothermal into the existing Gold Book.',
-      'Keep that testimony distinct from the later H.R. 5631 text.',
-    ],
-    docIds: ['blm-raby-2025-12'],
-  },
-}
 
 export const POLICY_AREAS = [
   { id: 'operating', label: 'Operating guidance', capture: 'Coverage, legal force, publisher, updates, review cycle' },

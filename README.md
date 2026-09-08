@@ -4,6 +4,12 @@ International market development companion to [The Thermal Underground](https://
 
 Live: [mdev.thermalunderground.org](https://mdev.thermalunderground.org)
 
+Landing follows the GPCP chooser pattern. Enter one of three sectors:
+
+- Subsurface energy
+- Nuclear
+- Critical materials
+
 ## Run locally
 
 ```

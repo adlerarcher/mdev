@@ -1,236 +1,216 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
-const NAV = [
-  { id: 'markets', label: 'Markets' },
-  { id: 'partners', label: 'Partners' },
-  { id: 'pipeline', label: 'Pipeline' },
-  { id: 'resources', label: 'Resources' },
-]
-
-const SECTIONS = [
+const SECTORS = [
   {
-    id: 'markets',
-    kicker: '01 · Markets',
-    title: 'Where geothermal markets are forming',
-    body: 'Regional demand, offtake models, and the policy conditions that turn resource potential into bankable projects. Content for this section is coming next.',
+    id: 'subsurface',
+    label: 'Subsurface energy',
+    title: 'Subsurface energy',
+    lede: 'International market development for geothermal and related subsurface resources—where projects, partners, and offtake come together.',
   },
   {
-    id: 'partners',
-    kicker: '02 · Partners',
-    title: 'Who builds the market together',
-    body: 'Developers, utilities, DFIs, governments, and industry networks that move international geothermal from pilot to fleet. Partner map forthcoming.',
+    id: 'nuclear',
+    label: 'Nuclear',
+    title: 'Nuclear',
+    lede: 'Market pathways for nuclear deployment abroad: financing structures, supply chains, and partner ecosystems. Content forthcoming.',
   },
   {
-    id: 'pipeline',
-    kicker: '03 · Pipeline',
-    title: 'Projects on the path to operation',
-    body: 'A working view of international development stages—from prospecting and financing through construction and first power. Pipeline entries forthcoming.',
-  },
-  {
-    id: 'resources',
-    kicker: '04 · Resources',
-    title: 'Tools and references for market work',
-    body: 'Reports, data portals, and frameworks used in international geothermal market development. Resource list forthcoming.',
+    id: 'critical-materials',
+    label: 'Critical materials',
+    title: 'Critical materials',
+    lede: 'Markets and partnerships around critical minerals and materials that enable the energy transition. Content forthcoming.',
   },
 ]
 
-function scrollToId(id) {
-  document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+const MOSAIC = [
+  { src: '/mosaic-1.jpg', className: 'tile wide' },
+  { src: '/mosaic-2.jpg', className: 'tile' },
+  { src: '/mosaic-3.jpg', className: 'tile portrait' },
+  { src: '/mosaic-4.jpg', className: 'tile' },
+  { src: '/mosaic-5.jpg', className: 'tile' },
+  { src: '/mosaic-6.jpg', className: 'tile' },
+  { src: '/mosaic-7.jpg', className: 'tile wide' },
+  { src: '/mosaic-8.jpg', className: 'tile' },
+]
+
+function Atmosphere({ mosaicRef, washRef }) {
+  return (
+    <>
+      <div className="wash" aria-hidden="true" ref={washRef}>
+        <img src="/wash.jpg" alt="" />
+      </div>
+      <div className="rays" aria-hidden="true" />
+      <div className="wisps" aria-hidden="true">
+        <span /><span /><span /><span />
+      </div>
+      <div className="mosaic" aria-hidden="true" ref={mosaicRef}>
+        {MOSAIC.map((tile) => (
+          <div key={tile.src} className={tile.className}>
+            <img src={tile.src} alt="" loading="eager" decoding="async" />
+          </div>
+        ))}
+      </div>
+    </>
+  )
 }
 
-function Nav({ activeId, onNavigate }) {
-  const [open, setOpen] = useState(false)
-
+function SiteNav({ onHome }) {
   return (
-    <header className="fixed inset-x-0 top-0 z-40 border-b border-white/[0.06] bg-[#0c1210]/80 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a
-          href="#top"
-          className="font-mono text-[0.7rem] uppercase tracking-[0.22em] text-[var(--ink)]"
-          onClick={(e) => {
-            e.preventDefault()
-            window.scrollTo({ top: 0, behavior: 'smooth' })
-            onNavigate?.(null)
-            setOpen(false)
-          }}
-        >
-          MDEV
-        </a>
-
-        <nav className="hidden items-center gap-7 md:flex" aria-label="Primary">
-          {NAV.map((item) => (
-            <a
-              key={item.id}
-              href={`#${item.id}`}
-              className="nav-link"
-              aria-current={activeId === item.id ? 'true' : undefined}
-              onClick={(e) => {
-                e.preventDefault()
-                scrollToId(item.id)
-                onNavigate?.(item.id)
-              }}
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
-
-        <button
-          type="button"
-          className="nav-link md:hidden"
-          aria-expanded={open}
-          aria-controls="mobile-nav"
-          onClick={() => setOpen((v) => !v)}
-        >
-          {open ? 'Close' : 'Menu'}
-        </button>
-      </div>
-
-      {open && (
-        <div id="mobile-nav" className="border-t border-white/[0.06] px-6 py-4 md:hidden">
-          <nav className="flex flex-col gap-4" aria-label="Mobile">
-            {NAV.map((item) => (
-              <a
-                key={item.id}
-                href={`#${item.id}`}
-                className="nav-link"
-                aria-current={activeId === item.id ? 'true' : undefined}
-                onClick={(e) => {
-                  e.preventDefault()
-                  scrollToId(item.id)
-                  onNavigate?.(item.id)
-                  setOpen(false)
-                }}
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-        </div>
-      )}
+    <header className="site-nav">
+      <a
+        className="brand"
+        href="/"
+        onClick={(e) => {
+          e.preventDefault()
+          onHome?.()
+        }}
+      >
+        <img src="/logo.png" width="256" height="256" alt="" />
+        <span className="brand-name">
+          Market Development <i>MDEV</i>
+        </span>
+        <span className="demo-mark">Demo</span>
+      </a>
     </header>
   )
 }
 
-function Hero() {
+function Landing({ onEnter }) {
   return (
-    <section id="top" className="relative flex min-h-screen flex-col justify-end overflow-hidden px-6 pb-16 pt-32 md:pb-24 md:pt-40">
-      <div className="hero-field" aria-hidden="true">
-        <div className="hero-field__orb" />
-        <div className="hero-field__grid" />
-      </div>
-
-      <div className="relative mx-auto w-full max-w-6xl animate-fadeIn">
-        <p className="font-mono text-[0.65rem] uppercase tracking-[0.28em] text-[var(--accent)]">
-          International market development
-        </p>
-        <h1 className="mt-5 font-display text-[clamp(3.5rem,12vw,8.5rem)] font-normal leading-[0.88] tracking-[-0.02em] text-[var(--ink)]">
-          MDEV
+    <main className="hero">
+      <div className="stack">
+        <div className="logo-shell rise d1">
+          <span className="logo-glow" aria-hidden="true" />
+          <span className="logo-glow-outer" aria-hidden="true" />
+          <span className="logo-ring logo-ring--a" aria-hidden="true" />
+          <span className="logo-ring logo-ring--b" aria-hidden="true" />
+          <span className="logo-ring logo-ring--c" aria-hidden="true" />
+          <span className="logo-spark logo-spark--1" aria-hidden="true" />
+          <span className="logo-spark logo-spark--2" aria-hidden="true" />
+          <span className="logo-spark logo-spark--3" aria-hidden="true" />
+          <span className="logo-spark logo-spark--4" aria-hidden="true" />
+          <img src="/logo.png" width="256" height="256" alt="Thermal Underground" />
+        </div>
+        <p className="kicker rise d2">International market development</p>
+        <h1>
+          <span className="title-line rise d3">Accelerating</span>
+          <span className="title-accent rise d4">Energy Abundance</span>
         </h1>
-        <p className="mt-8 max-w-xl font-body text-lg leading-relaxed text-[var(--ink-muted)] md:text-xl">
-          Building the international markets where geothermal moves from resource to revenue.
+        <span className="rule rise d5" aria-hidden="true" />
+        <p className="lede rise d5">
+          Choose a sector to enter. MDEV maps markets, partners, and pipeline work across subsurface energy, nuclear, and critical materials.
         </p>
-        <div className="mt-10 flex flex-wrap items-center gap-4">
-          <a
-            href="#markets"
-            className="inline-flex items-center bg-[var(--accent)] px-5 py-3 font-mono text-[0.68rem] uppercase tracking-[0.16em] text-[var(--bg-deep)] transition hover:bg-[#e0b56e]"
-            onClick={(e) => {
-              e.preventDefault()
-              scrollToId('markets')
-            }}
-          >
-            Explore markets
-          </a>
-          <a
-            href="https://thermalunderground.org"
-            className="inline-flex items-center px-2 py-3 font-mono text-[0.68rem] uppercase tracking-[0.16em] text-[var(--ink-muted)] transition hover:text-[var(--accent)]"
-          >
-            Thermal Underground →
-          </a>
+        <div className="enter-row rise d6">
+          {SECTORS.map((sector) => (
+            <span key={sector.id} className="enter-shell">
+              <button type="button" className="enter" onClick={() => onEnter(sector.id)}>
+                {sector.label}
+              </button>
+            </span>
+          ))}
         </div>
       </div>
-    </section>
+    </main>
   )
 }
 
-function PlaceholderSection({ section, index }) {
+function SectorView({ sectorId, onBack }) {
+  const sector = SECTORS.find((s) => s.id === sectorId)
+  if (!sector) return null
+
   return (
-    <section
-      id={section.id}
-      className="scroll-mt-24 border-t border-white/[0.06] px-6 py-20 md:py-28"
-      style={{ animationDelay: `${index * 60}ms` }}
-    >
-      <div className="mx-auto max-w-6xl animate-rise">
-        <p className="font-mono text-[0.65rem] uppercase tracking-[0.22em] text-[var(--accent)]">
-          {section.kicker}
+    <div className="sector-page">
+      <main className="sector-main">
+        <p className="kicker rise d1">MDEV · Sector</p>
+        <h1 className="rise d2">{sector.title}</h1>
+        <span className="rule rise d3" aria-hidden="true" />
+        <p className="lede rise d4">{sector.lede}</p>
+        <p className="lede rise d5" style={{ opacity: 0.55, fontSize: '16px' }}>
+          Placeholder desk · content forthcoming
         </p>
-        <hr className="section-rule mt-5 max-w-xs" />
-        <h2 className="mt-8 max-w-2xl font-display text-[2rem] font-normal leading-tight tracking-tight text-[var(--ink)] md:text-[2.75rem]">
-          {section.title}
-        </h2>
-        <p className="mt-5 max-w-2xl font-body text-base leading-relaxed text-[var(--ink-muted)] md:text-lg">
-          {section.body}
-        </p>
-        <p className="mt-10 font-mono text-[0.62rem] uppercase tracking-[0.18em] text-white/25">
-          Placeholder · content forthcoming
-        </p>
-      </div>
-    </section>
+        <button type="button" className="back-link rise d6" onClick={onBack}>
+          ← Back to sectors
+        </button>
+      </main>
+    </div>
   )
 }
 
 function Footer() {
   return (
-    <footer className="border-t border-white/[0.08] px-6 py-14">
-      <div className="mx-auto flex max-w-6xl flex-col gap-6 md:flex-row md:items-end md:justify-between">
-        <div>
-          <div className="font-mono text-[0.7rem] uppercase tracking-[0.22em] text-[var(--ink)]">MDEV</div>
-          <p className="mt-3 max-w-md font-body text-sm leading-relaxed text-[var(--ink-muted)]">
-            International market development companion to{' '}
-            <a href="https://thermalunderground.org" className="text-[var(--accent)] hover:underline">
-              The Thermal Underground
-            </a>
-            .
-          </p>
-        </div>
-        <p className="font-mono text-[0.62rem] uppercase tracking-[0.16em] text-white/30">
-          mdev.thermalunderground.org
-        </p>
-      </div>
+    <footer className="page-footer">
+      <p>
+        Thermal Underground ·{' '}
+        <a href="https://thermalunderground.org">thermalunderground.org</a>
+        {' '}— international market development.
+      </p>
+      <p>Copy © Adler Archer.</p>
     </footer>
   )
 }
 
+function sectorFromPath() {
+  const path = window.location.pathname.replace(/\/+$/, '') || '/'
+  const match = SECTORS.find((s) => path === `/${s.id}`)
+  return match?.id ?? null
+}
+
 export default function App() {
-  const [activeId, setActiveId] = useState(null)
+  const [sector, setSector] = useState(() => (typeof window !== 'undefined' ? sectorFromPath() : null))
+  const mosaicRef = useRef(null)
+  const washRef = useRef(null)
 
   useEffect(() => {
-    const ids = NAV.map((n) => n.id)
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-        if (visible?.target?.id) setActiveId(visible.target.id)
-      },
-      { rootMargin: '-30% 0px -55% 0px', threshold: [0.1, 0.35, 0.6] },
-    )
-    ids.forEach((id) => {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
-    return () => observer.disconnect()
+    const onPop = () => setSector(sectorFromPath())
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
   }, [])
 
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
+    const mosaic = mosaicRef.current
+    const wash = washRef.current
+    if (!mosaic) return undefined
+    let x = 0
+    let y = 0
+    let tx = 0
+    let ty = 0
+    let raf = 0
+    const onMove = (e) => {
+      tx = (e.clientX / window.innerWidth - 0.5) * 28
+      ty = (e.clientY / window.innerHeight - 0.5) * 18
+    }
+    const tick = () => {
+      x += (tx - x) * 0.06
+      y += (ty - y) * 0.06
+      mosaic.style.transform = `translate3d(${x}px,${y}px,0)`
+      if (wash) wash.style.transform = `translate3d(${x * 0.35}px,${y * 0.35}px,0)`
+      raf = requestAnimationFrame(tick)
+    }
+    document.addEventListener('pointermove', onMove)
+    raf = requestAnimationFrame(tick)
+    return () => {
+      document.removeEventListener('pointermove', onMove)
+      cancelAnimationFrame(raf)
+    }
+  }, [sector])
+
+  const goHome = () => {
+    setSector(null)
+    window.history.pushState({}, '', '/')
+  }
+
+  const enterSector = (id) => {
+    setSector(id)
+    window.history.pushState({}, '', `/${id}`)
+  }
+
   return (
-    <div className="grain relative min-h-screen bg-[var(--bg)] text-[var(--ink)]">
-      <Nav activeId={activeId} onNavigate={setActiveId} />
-      <main>
-        <Hero />
-        {SECTIONS.map((section, index) => (
-          <PlaceholderSection key={section.id} section={section} index={index} />
-        ))}
-      </main>
+    <div className="page">
+      <Atmosphere mosaicRef={mosaicRef} washRef={washRef} />
+      <SiteNav onHome={goHome} />
+      {sector
+        ? <SectorView sectorId={sector} onBack={goHome} />
+        : <Landing onEnter={enterSector} />}
       <Footer />
     </div>
   )

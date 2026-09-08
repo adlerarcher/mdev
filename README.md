@@ -4,11 +4,10 @@ International market development companion to [The Thermal Underground](https://
 
 Live: [mdev.thermalunderground.org](https://mdev.thermalunderground.org)
 
-Landing follows the GPCP chooser pattern. Enter one of three sectors:
+Landing chooser programs:
 
-- Subsurface energy
-- Nuclear
-- Critical materials
+- **Geothermal** (live) — International Geothermal Markets reference
+- Nuclear · Oil & gas · Critical minerals — coming soon
 
 ## Run locally
 
@@ -17,16 +16,16 @@ npm install
 npm run dev
 ```
 
+## Content
+
+Geothermal market records live in `src/content/geothermal.js` (markets, developments, documents, U.S. engagement, domestic policy).
+
 ## Deploy
 
 Pushes to `main` build and deploy via GitHub Actions Pages.
 
 ### DNS
 
-At the DNS host for `thermalunderground.org`, add:
-
 ```
 CNAME  mdev  →  adlerarcher.github.io
 ```
-
-Then in the repo: **Settings → Pages → Custom domain** `mdev.thermalunderground.org` (also set via `public/CNAME`), wait for verification, and enforce HTTPS.

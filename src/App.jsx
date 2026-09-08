@@ -1,23 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
+import GeothermalApp, { parseGeothermalPath } from './GeothermalApp.jsx'
 
-const SECTORS = [
+const PROGRAMS = [
   {
-    id: 'subsurface',
-    label: 'Subsurface energy',
-    title: 'Subsurface energy',
-    lede: 'International market development for geothermal and related subsurface resources—where projects, partners, and offtake come together.',
+    id: 'geothermal',
+    label: 'Geothermal',
+    status: 'live',
   },
   {
     id: 'nuclear',
     label: 'Nuclear',
-    title: 'Nuclear',
-    lede: 'Market pathways for nuclear deployment abroad: financing structures, supply chains, and partner ecosystems. Content forthcoming.',
+    status: 'soon',
   },
   {
-    id: 'critical-materials',
-    label: 'Critical materials',
-    title: 'Critical materials',
-    lede: 'Markets and partnerships around critical minerals and materials that enable the energy transition. Content forthcoming.',
+    id: 'oil-gas',
+    label: 'Oil & gas',
+    status: 'soon',
+  },
+  {
+    id: 'critical-minerals',
+    label: 'Critical minerals',
+    status: 'soon',
   },
 ]
 
@@ -74,6 +77,27 @@ function SiteNav({ onHome }) {
   )
 }
 
+function EnterButton({ program, onEnter }) {
+  const soon = program.status === 'soon'
+  const live = program.status === 'live'
+
+  return (
+    <span className={`enter-shell${soon ? ' enter-shell--soon' : ''}${live ? ' enter-shell--live' : ''}`}>
+      <button
+        type="button"
+        className={`enter${soon ? ' enter--soon' : ''}${live ? ' enter--live' : ''}`}
+        aria-label={soon ? `${program.label} — coming soon` : `Enter ${program.label}`}
+        onClick={() => {
+          if (live) onEnter(program.id)
+        }}
+      >
+        <span className="enter-label">{program.label}</span>
+        {soon && <span className="enter-soon">Coming soon</span>}
+      </button>
+    </span>
+  )
+}
+
 function Landing({ onEnter }) {
   return (
     <main className="hero">
@@ -90,22 +114,18 @@ function Landing({ onEnter }) {
           <span className="logo-spark logo-spark--4" aria-hidden="true" />
           <img src="/logo.png" width="256" height="256" alt="Thermal Underground" />
         </div>
-        <p className="kicker rise d2">International market development</p>
+        <p className="kicker rise d2">DOE market development</p>
         <h1>
           <span className="title-line rise d3">Accelerating</span>
           <span className="title-accent rise d4">Energy Abundance</span>
         </h1>
         <span className="rule rise d5" aria-hidden="true" />
         <p className="lede rise d5">
-          Choose a sector to enter. MDEV maps markets, partners, and pipeline work across subsurface energy, nuclear, and critical materials.
+          Choose an energy program. Geothermal opens the international markets reference. Nuclear, oil and gas, and critical minerals are forthcoming.
         </p>
         <div className="enter-row rise d6">
-          {SECTORS.map((sector) => (
-            <span key={sector.id} className="enter-shell">
-              <button type="button" className="enter" onClick={() => onEnter(sector.id)}>
-                {sector.label}
-              </button>
-            </span>
+          {PROGRAMS.map((program) => (
+            <EnterButton key={program.id} program={program} onEnter={onEnter} />
           ))}
         </div>
       </div>
@@ -113,29 +133,7 @@ function Landing({ onEnter }) {
   )
 }
 
-function SectorView({ sectorId, onBack }) {
-  const sector = SECTORS.find((s) => s.id === sectorId)
-  if (!sector) return null
-
-  return (
-    <div className="sector-page">
-      <main className="sector-main">
-        <p className="kicker rise d1">MDEV · Sector</p>
-        <h1 className="rise d2">{sector.title}</h1>
-        <span className="rule rise d3" aria-hidden="true" />
-        <p className="lede rise d4">{sector.lede}</p>
-        <p className="lede rise d5" style={{ opacity: 0.55, fontSize: '16px' }}>
-          Placeholder desk · content forthcoming
-        </p>
-        <button type="button" className="back-link rise d6" onClick={onBack}>
-          ← Back to sectors
-        </button>
-      </main>
-    </div>
-  )
-}
-
-function Footer() {
+function LandingFooter() {
   return (
     <footer className="page-footer">
       <p>
@@ -148,24 +146,37 @@ function Footer() {
   )
 }
 
-function sectorFromPath() {
+function programFromPath() {
   const path = window.location.pathname.replace(/\/+$/, '') || '/'
-  const match = SECTORS.find((s) => path === `/${s.id}`)
-  return match?.id ?? null
+  if (path === '/geothermal' || path.startsWith('/geothermal/')) return 'geothermal'
+  if (path === '/subsurface' || path.startsWith('/subsurface/')) return 'geothermal'
+  return null
 }
 
 export default function App() {
-  const [sector, setSector] = useState(() => (typeof window !== 'undefined' ? sectorFromPath() : null))
+  const [program, setProgram] = useState(() => (typeof window !== 'undefined' ? programFromPath() : null))
   const mosaicRef = useRef(null)
   const washRef = useRef(null)
+  const onChooser = program !== 'geothermal'
 
   useEffect(() => {
-    const onPop = () => setSector(sectorFromPath())
+    const onPop = () => setProgram(programFromPath())
     window.addEventListener('popstate', onPop)
     return () => window.removeEventListener('popstate', onPop)
   }, [])
 
   useEffect(() => {
+    // Legacy subsurface URLs → geothermal
+    const path = window.location.pathname
+    if (path === '/subsurface' || path.startsWith('/subsurface/')) {
+      const next = path.replace(/^\/subsurface/, '/geothermal') || '/geothermal'
+      window.history.replaceState({}, '', next)
+      setProgram('geothermal')
+    }
+  }, [])
+
+  useEffect(() => {
+    if (!onChooser) return undefined
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined
     const mosaic = mosaicRef.current
     const wash = washRef.current
@@ -192,26 +203,39 @@ export default function App() {
       document.removeEventListener('pointermove', onMove)
       cancelAnimationFrame(raf)
     }
-  }, [sector])
+  }, [onChooser])
 
   const goHome = () => {
-    setSector(null)
+    setProgram(null)
     window.history.pushState({}, '', '/')
   }
 
-  const enterSector = (id) => {
-    setSector(id)
-    window.history.pushState({}, '', `/${id}`)
+  const enterProgram = (id) => {
+    if (id !== 'geothermal') return
+    setProgram(id)
+    const already = parseGeothermalPath(window.location.pathname)
+    if (!already) {
+      window.history.pushState({}, '', '/geothermal')
+    }
+    window.scrollTo(0, 0)
+  }
+
+  if (program === 'geothermal') {
+    return (
+      <GeothermalApp
+        programs={PROGRAMS}
+        onHome={goHome}
+        onProgram={enterProgram}
+      />
+    )
   }
 
   return (
     <div className="page">
       <Atmosphere mosaicRef={mosaicRef} washRef={washRef} />
       <SiteNav onHome={goHome} />
-      {sector
-        ? <SectorView sectorId={sector} onBack={goHome} />
-        : <Landing onEnter={enterSector} />}
-      <Footer />
+      <Landing onEnter={enterProgram} />
+      <LandingFooter />
     </div>
   )
 }

@@ -300,38 +300,6 @@ function Header({ route, navigate, programs, onProgram, onHome }) {
             <em>Geothermal</em>
           </span>
         </a>
-        <nav className="app-nav app-nav-compact" aria-label="Geothermal">
-          <a
-            href="/geothermal"
-            className={route.view === 'home' ? 'is-active' : undefined}
-            onClick={(e) => {
-              e.preventDefault()
-              navigate('/geothermal')
-            }}
-          >
-            Home
-          </a>
-          <a
-            href="/geothermal/markets"
-            className={route.view === 'markets' ? 'is-active' : undefined}
-            onClick={(e) => {
-              e.preventDefault()
-              navigate('/geothermal/markets')
-            }}
-          >
-            All markets
-          </a>
-          <a
-            href="/geothermal/developments"
-            className={route.view === 'developments' ? 'is-active' : undefined}
-            onClick={(e) => {
-              e.preventDefault()
-              navigate('/geothermal/developments')
-            }}
-          >
-            Developments
-          </a>
-        </nav>
         <CountrySwitcher route={route} navigate={navigate} />
         <ProgramSwitcher
           programs={programs}

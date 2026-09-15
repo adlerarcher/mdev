@@ -1,31 +1,21 @@
 # MDEV
 
-International market development companion to [The Thermal Underground](https://thermalunderground.org).
+International market development. Live: [mdev.thermalunderground.org](https://mdev.thermalunderground.org)
 
-Live: [mdev.thermalunderground.org](https://mdev.thermalunderground.org)
+Home is the animated world map. Country profiles include geothermal briefs and military bases where listed.
 
-Landing chooser programs:
+Also served under AADOE at `/mdev/` from the nested app in the aadoe repo.
 
-- **Geothermal** (live) — International Geothermal Markets reference
-- Nuclear · Oil & gas · Critical minerals — coming soon
+## Routes
+
+- `/` — map home
+- `/geothermal/markets` — country index
+- `/geothermal/markets/:slug` — country profile (+ military bases)
+- `/geothermal/developments` — recent developments
 
 ## Run locally
 
 ```
 npm install
 npm run dev
-```
-
-## Content
-
-Geothermal market records live in `src/content/geothermal.js` (markets, developments, documents, U.S. engagement, domestic policy).
-
-## Deploy
-
-Pushes to `main` build and deploy via GitHub Actions Pages.
-
-### DNS
-
-```
-CNAME  mdev  →  adlerarcher.github.io
 ```

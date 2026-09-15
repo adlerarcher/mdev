@@ -36,6 +36,7 @@ function writeDeepLinks() {
   }
 }
 
+// Standalone at mdev.thermalunderground.org/
 export default defineConfig({
   base: '/',
   plugins: [react(), writeDeepLinks()],
